@@ -10,6 +10,10 @@
   --success: #6b8f71;
   --warning: #b39363;
   --danger: #a65f5f;
+  --danger-hover: #8f4c4c;
+  --danger-light: #ffb3b3;
+  --text-inverse: #121418;
+  --text-bright: #ffffff;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;

@@ -19,9 +19,10 @@
 
 /* Error Alert */
 .error-alert {
-  background-color: rgba(166, 95, 95, 0.12);
+  background-color: var(--surface-2);
   border: 1px solid var(--danger);
-  color: #ffb3b3;
+  border-left: 4px solid var(--danger);
+  color: var(--danger-light);
   padding: var(--space-3) var(--space-4);
   margin-bottom: var(--space-4);
 }
@@ -83,6 +84,67 @@
   display: flex;
   justify-content: flex-end;
   margin-top: var(--space-4);
+}
+
+/* Filter Bar & Task Counts */
+.filter-bar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-buttons {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.filter-btn {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.875rem;
+  min-height: 44px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.filter-btn.active {
+  background-color: var(--surface-2);
+  border-color: var(--accent);
+  color: var(--text-bright);
+  border-bottom: 2px solid var(--accent);
+  font-weight: 600;
+}
+
+.task-counts-summary {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.count-separator {
+  opacity: 0.5;
+}
+
+.count-item.pending strong {
+  color: var(--accent);
+}
+
+.count-item.completed strong {
+  color: var(--success);
 }
 
 /* Task List */
@@ -181,7 +243,7 @@
   display: block;
   width: 5px;
   height: 10px;
-  border: solid #121418;
+  border: solid var(--text-inverse);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   margin-bottom: 2px;
@@ -202,6 +264,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin-bottom: var(--space-1);
 }
@@ -229,13 +292,13 @@
 .status-badge.pending {
   color: var(--accent);
   border-color: var(--accent);
-  background-color: rgba(95, 127, 156, 0.1);
+  background-color: var(--surface-2);
 }
 
 .status-badge.completed {
   color: var(--success);
   border-color: var(--success);
-  background-color: rgba(107, 143, 113, 0.1);
+  background-color: var(--surface-2);
 }
 
 .task-description {
@@ -260,6 +323,7 @@
   border-top: 1px solid var(--border);
   padding-top: var(--space-2);
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .btn-action {
@@ -275,7 +339,7 @@
 
 .btn-action.delete:hover {
   border-color: var(--danger);
-  color: #ff9999;
+  color: var(--danger-light);
 }
 
 /* Edit Form */
@@ -294,7 +358,7 @@
 .btn-primary {
   background-color: var(--accent);
   border-color: var(--accent);
-  color: #ffffff;
+  color: var(--text-bright);
   font-weight: 500;
 }
 
@@ -311,13 +375,13 @@
 .btn-danger {
   background-color: var(--danger);
   border-color: var(--danger);
-  color: #ffffff;
+  color: var(--text-bright);
   font-weight: 500;
 }
 
 .btn-danger:hover {
-  background-color: #8f4c4c;
-  border-color: #8f4c4c;
+  background-color: var(--danger-hover);
+  border-color: var(--danger-hover);
 }
 
 /* Modal / Dialog */
@@ -360,4 +424,48 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);
+}
+
+/* Mobile-First Responsiveness (360px viewport support) */
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-4) var(--space-2);
+  }
+
+  .task-item {
+    padding: var(--space-3);
+  }
+
+  .filter-bar-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-buttons {
+    display: flex;
+    width: 100%;
+  }
+
+  .filter-btn {
+    flex: 1;
+    text-align: center;
+  }
+
+  .task-counts-summary {
+    justify-content: center;
+  }
+
+  .task-actions {
+    width: 100%;
+  }
+
+  .btn-action {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .form-actions button,
+  .edit-actions button {
+    width: 100%;
+  }
 }
