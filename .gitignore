@@ -54,3 +54,6 @@ yarn-error.log*
 *.swo
 .DS_Store
 Thumbs.db
+
+# Personal Study Guides
+docs/PROJECT_OVERVIEW.md
