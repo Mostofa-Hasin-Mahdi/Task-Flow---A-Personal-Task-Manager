@@ -2,12 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes.health import router as health_router
+from app.api.routes.tasks import router as tasks_router
 from app.core.config import get_settings
 from app.core.handlers import register_exception_handlers
 
 
 def create_app() -> FastAPI:
-    """Application factory that configures CORS, exception handlers, and API routes."""
+    """Application factory configuring middleware, exception handlers, and API routes."""
     settings = get_settings()
 
     app = FastAPI(
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
 
     # Register routers
     app.include_router(health_router)
+    app.include_router(tasks_router)
 
     return app
 
