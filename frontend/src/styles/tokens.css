@@ -1,0 +1,27 @@
+:root {
+  --bg: #121418;
+  --surface: #1a1d23;
+  --surface-2: #21252c;
+  --border: #2e333c;
+  --text: #d5d9e0;
+  --text-muted: #8a909b;
+  --accent: #5f7f9c;
+  --accent-hover: #6f90ae;
+  --success: #6b8f71;
+  --warning: #b39363;
+  --danger: #a65f5f;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+/* Global rule enforcing strict zero border-radius everywhere */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-sizing: border-box;
+}
