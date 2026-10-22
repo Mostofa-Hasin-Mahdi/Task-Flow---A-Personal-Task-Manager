@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Generator, List, Optional
 import pytest
 from fastapi.testclient import TestClient
@@ -10,6 +10,8 @@ from app.repositories.task_repository import TaskRepository
 from app.schemas.task import TaskCreate, TaskUpdate
 from app.services.task_service import TaskService
 
+PRIORITY_RANK = {"high": 1, "medium": 2, "low": 3}
+
 
 class FakeTaskRepository(TaskRepository):
     """In-memory task repository implementing the TaskRepository Protocol (LSP & DIP)."""
@@ -20,7 +22,11 @@ class FakeTaskRepository(TaskRepository):
 
     def list(self, status: Optional[str] = None) -> List[Task]:
         results = [t for t in self.tasks if status is None or t.status == status]
-        return sorted(results, key=lambda t: t.created_at, reverse=True)
+        # Sort by priority (high first), then created_at descending
+        return sorted(
+            results,
+            key=lambda t: (PRIORITY_RANK.get(t.priority, 4), -t.created_at.timestamp()),
+        )
 
     def get(self, task_id: int) -> Optional[Task]:
         for t in self.tasks:
@@ -35,6 +41,8 @@ class FakeTaskRepository(TaskRepository):
             title=data.title,
             description=data.description,
             status="pending",
+            priority=data.priority or "medium",
+            due_date=data.due_date,
             created_at=now,
             updated_at=now,
         )
@@ -49,6 +57,10 @@ class FakeTaskRepository(TaskRepository):
             task.description = data.description
         if data.status is not None:
             task.status = data.status
+        if data.priority is not None:
+            task.priority = data.priority
+        if data.due_date is not None:
+            task.due_date = data.due_date
         task.updated_at = datetime.now(timezone.utc)
         return task
 

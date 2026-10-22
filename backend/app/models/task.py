@@ -1,5 +1,5 @@
-from datetime import datetime
-from sqlalchemy import CheckConstraint, DateTime, Integer, String, Text, func
+from datetime import date, datetime
+from sqlalchemy import CheckConstraint, Date, DateTime, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base
@@ -14,6 +14,10 @@ class Task(Base):
             "status IN ('pending', 'completed')",
             name="check_task_status",
         ),
+        CheckConstraint(
+            "priority IN ('low', 'medium', 'high')",
+            name="check_task_priority",
+        ),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -25,6 +29,13 @@ class Task(Base):
         default="pending",
         server_default="pending",
     )
+    priority: Mapped[str] = mapped_column(
+        String(10),
+        nullable=False,
+        default="medium",
+        server_default="medium",
+    )
+    due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

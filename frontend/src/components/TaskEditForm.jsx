@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 
 /**
- * Inline edit form for existing task item.
+ * Inline edit form for existing task item with priority and due_date.
  */
 export default function TaskEditForm({ task, onSave, onCancel }) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
+  const [priority, setPriority] = useState(task.priority || 'medium');
+  const [dueDate, setDueDate] = useState(task.due_date ? task.due_date.substring(0, 10) : '');
   const [fieldError, setFieldError] = useState('');
   const [serverError, setServerError] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,6 +34,8 @@ export default function TaskEditForm({ task, onSave, onCancel }) {
       await onSave({
         title: trimmedTitle,
         description: description.trim() || null,
+        priority,
+        due_date: dueDate || null,
       });
     } catch (err) {
       setServerError({
@@ -84,6 +88,37 @@ export default function TaskEditForm({ task, onSave, onCancel }) {
           onChange={(e) => setDescription(e.target.value)}
           disabled={isSaving}
         />
+      </div>
+
+      <div className="form-row-dual">
+        <div className="form-group flex-1">
+          <label htmlFor={`edit-priority-${task.id}`} className="form-label">
+            Priority
+          </label>
+          <select
+            id={`edit-priority-${task.id}`}
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            disabled={isSaving}
+          >
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+        </div>
+
+        <div className="form-group flex-1">
+          <label htmlFor={`edit-due-date-${task.id}`} className="form-label">
+            Due Date
+          </label>
+          <input
+            id={`edit-due-date-${task.id}`}
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            disabled={isSaving}
+          />
+        </div>
       </div>
 
       <div className="edit-actions">

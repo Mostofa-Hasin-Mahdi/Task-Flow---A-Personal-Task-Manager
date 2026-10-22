@@ -128,3 +128,40 @@ def test_non_integer_task_id_returns_400(client: TestClient):
     res = client.patch("/api/tasks/abc/toggle")
     assert res.status_code == 400
     assert res.json()["error"]["message"] == "Validation error"
+
+
+def test_create_and_sort_by_priority(client: TestClient):
+    client.post("/api/tasks", json={"title": "Low Priority Task", "priority": "low"})
+    client.post("/api/tasks", json={"title": "High Priority Task", "priority": "high"})
+    client.post("/api/tasks", json={"title": "Medium Priority Task", "priority": "medium"})
+
+    res = client.get("/api/tasks")
+    assert res.status_code == 200
+    tasks = res.json()["data"]
+    # High must come before Medium, which must come before Low
+    priorities = [t["priority"] for t in tasks]
+    assert priorities == ["high", "medium", "low"]
+
+
+def test_invalid_priority_returns_400(client: TestClient):
+    res = client.post("/api/tasks", json={"title": "Bad Priority", "priority": "urgent"})
+    assert res.status_code == 400
+    assert res.json()["error"]["message"] == "Validation error"
+
+
+def test_task_with_due_date(client: TestClient):
+    res = client.post(
+        "/api/tasks",
+        json={"title": "Task with date", "due_date": "2026-11-15", "priority": "high"},
+    )
+    assert res.status_code == 201
+    task = res.json()["data"]
+    assert task["due_date"] == "2026-11-15"
+    assert task["priority"] == "high"
+
+    # Invalid date format returns 400
+    res_bad_date = client.post(
+        "/api/tasks",
+        json={"title": "Task with bad date", "due_date": "not-a-date"},
+    )
+    assert res_bad_date.status_code == 400

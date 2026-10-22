@@ -1,5 +1,5 @@
 from typing import List, Optional, Protocol
-from sqlalchemy import desc, select
+from sqlalchemy import case, desc, select
 from sqlalchemy.orm import Session
 
 from app.models.task import Task
@@ -35,7 +35,15 @@ class SqlTaskRepository:
         stmt = select(Task)
         if status is not None:
             stmt = stmt.where(Task.status == status)
-        stmt = stmt.order_by(desc(Task.created_at))
+
+        # Sort by priority (high=1, medium=2, low=3) using CASE, then created_at descending
+        priority_order = case(
+            (Task.priority == "high", 1),
+            (Task.priority == "medium", 2),
+            (Task.priority == "low", 3),
+            else_=4,
+        )
+        stmt = stmt.order_by(priority_order, desc(Task.created_at))
         return list(self.db.scalars(stmt).all())
 
     def get(self, task_id: int) -> Optional[Task]:
@@ -47,6 +55,8 @@ class SqlTaskRepository:
             title=data.title,
             description=data.description,
             status="pending",
+            priority=data.priority or "medium",
+            due_date=data.due_date,
         )
         self.db.add(task)
         self.db.commit()
@@ -60,6 +70,10 @@ class SqlTaskRepository:
             task.description = data.description
         if data.status is not None:
             task.status = data.status
+        if data.priority is not None:
+            task.priority = data.priority
+        if data.due_date is not None:
+            task.due_date = data.due_date
 
         self.db.commit()
         self.db.refresh(task)

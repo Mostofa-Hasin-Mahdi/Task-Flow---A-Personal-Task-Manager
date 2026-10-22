@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import ErrorMessage from './ErrorMessage';
 
 /**
- * Task creation form with client-side trimming validation and server error display.
+ * Task creation form with title, description, priority, and due_date.
  */
 export default function TaskForm({ onAddTask }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const [dueDate, setDueDate] = useState('');
   const [fieldError, setFieldError] = useState('');
   const [serverError, setServerError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,9 +34,13 @@ export default function TaskForm({ onAddTask }) {
       await onAddTask({
         title: trimmedTitle,
         description: description.trim() || null,
+        priority,
+        due_date: dueDate || null,
       });
       setTitle('');
       setDescription('');
+      setPriority('medium');
+      setDueDate('');
     } catch (err) {
       setServerError({
         message: err.message || 'Failed to create task',
@@ -92,6 +98,37 @@ export default function TaskForm({ onAddTask }) {
           onChange={(e) => setDescription(e.target.value)}
           disabled={isSubmitting}
         />
+      </div>
+
+      <div className="form-row-dual">
+        <div className="form-group flex-1">
+          <label htmlFor="task-priority" className="form-label">
+            Priority
+          </label>
+          <select
+            id="task-priority"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            disabled={isSubmitting}
+          >
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+        </div>
+
+        <div className="form-group flex-1">
+          <label htmlFor="task-due-date" className="form-label">
+            Due Date <span className="optional-tag">(optional)</span>
+          </label>
+          <input
+            id="task-due-date"
+            type="date"
+            value={dueDate}
+            onChange={(e) => setDueDate(e.target.value)}
+            disabled={isSubmitting}
+          />
+        </div>
       </div>
 
       <div className="form-actions">

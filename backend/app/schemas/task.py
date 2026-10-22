@@ -1,8 +1,11 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Generic, List, Literal, Optional, TypeVar
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 T = TypeVar("T")
+
+PriorityType = Literal["low", "medium", "high"]
+StatusType = Literal["pending", "completed"]
 
 
 class TaskCreate(BaseModel):
@@ -10,6 +13,8 @@ class TaskCreate(BaseModel):
 
     title: str = Field(..., min_length=1, max_length=255)
     description: Optional[str] = None
+    priority: Optional[PriorityType] = "medium"
+    due_date: Optional[date] = None
 
     @field_validator("title", mode="before")
     @classmethod
@@ -39,7 +44,9 @@ class TaskUpdate(BaseModel):
 
     title: Optional[str] = None
     description: Optional[str] = None
-    status: Optional[Literal["pending", "completed"]] = None
+    status: Optional[StatusType] = None
+    priority: Optional[PriorityType] = None
+    due_date: Optional[date] = None
 
     @field_validator("title", mode="before")
     @classmethod
@@ -67,7 +74,13 @@ class TaskUpdate(BaseModel):
 
     @model_validator(mode="after")
     def check_at_least_one_field(self) -> "TaskUpdate":
-        if self.title is None and self.description is None and self.status is None:
+        if (
+            self.title is None
+            and self.description is None
+            and self.status is None
+            and self.priority is None
+            and self.due_date is None
+        ):
             raise ValueError("At least one field must be provided for update")
         return self
 
@@ -78,7 +91,9 @@ class TaskRead(BaseModel):
     id: int
     title: str
     description: Optional[str] = None
-    status: Literal["pending", "completed"]
+    status: StatusType
+    priority: PriorityType
+    due_date: Optional[date] = None
     created_at: datetime
     updated_at: datetime
 

@@ -28,15 +28,12 @@ export function useTasks() {
     loadTasks(filter);
   }, [filter, loadTasks]);
 
-  const addTask = async ({ title, description }) => {
+  const addTask = async (taskData) => {
     setError(null);
     try {
-      const newTask = await taskApi.createTask({ title, description });
-      // If the current filter is 'completed', the newly created 'pending' task won't show
-      // But if filter is 'all' or 'pending', prepend it
-      if (filter === 'all' || filter === 'pending') {
-        setTasks((prev) => [newTask, ...prev]);
-      }
+      const newTask = await taskApi.createTask(taskData);
+      // Reload tasks or re-fetch to maintain priority ordering correctly
+      await loadTasks();
       return newTask;
     } catch (err) {
       setError(err.message || 'Failed to create task');

@@ -80,6 +80,17 @@
   color: var(--text-muted);
 }
 
+.form-row-dual {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.flex-1 {
+  flex: 1;
+  margin-bottom: 0;
+}
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -280,6 +291,55 @@
   color: var(--text-muted);
 }
 
+.badge-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.priority-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--border);
+}
+
+.priority-badge.priority-low {
+  color: var(--text-muted);
+  border-color: var(--border);
+  background-color: var(--surface-2);
+}
+
+.priority-badge.priority-medium {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: var(--surface-2);
+}
+
+.priority-badge.priority-high {
+  color: var(--warning);
+  border-color: var(--warning);
+  background-color: var(--surface-2);
+}
+
+.overdue-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid var(--danger);
+  color: var(--danger-light);
+  background-color: var(--surface-2);
+}
+
+.task-item.overdue:not(.completed) {
+  border-left: 4px solid var(--danger);
+}
+
 .status-badge {
   font-size: 0.75rem;
   font-weight: 600;
@@ -313,6 +373,15 @@
   font-size: 0.75rem;
   color: var(--text-muted);
   margin-top: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.task-due-date.text-overdue {
+  color: var(--danger-light);
+  font-weight: 600;
 }
 
 /* Task actions (Edit / Delete) */

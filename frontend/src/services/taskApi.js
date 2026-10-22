@@ -68,10 +68,10 @@ export const taskApi = {
   /**
    * Create a new task.
    */
-  createTask({ title, description }) {
+  createTask(payload) {
     return request('/tasks', {
       method: 'POST',
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify(payload),
     });
   },
 

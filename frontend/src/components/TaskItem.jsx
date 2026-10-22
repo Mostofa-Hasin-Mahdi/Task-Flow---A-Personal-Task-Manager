@@ -12,13 +12,29 @@ function formatDate(dateString) {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
   });
 }
 
 /**
- * TaskItem component rendering task content, square checkbox, edit, and delete confirmation.
+ * Checks if a task is overdue (pending and due_date < start of today).
+ */
+function isTaskOverdue(task) {
+  if (!task.due_date || task.status === 'completed') return false;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Parse YYYY-MM-DD cleanly in local timezone
+  const parts = task.due_date.split('-');
+  if (parts.length === 3) {
+    const dueDate = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+    return dueDate < today;
+  }
+  return new Date(task.due_date) < today;
+}
+
+/**
+ * TaskItem component rendering task content, priority badge, due date, overdue highlight,
+ * square checkbox, edit, and delete confirmation.
  */
 export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,6 +42,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
   const [isToggling, setIsToggling] = useState(false);
 
   const isCompleted = task.status === 'completed';
+  const overdue = isTaskOverdue(task);
 
   const handleToggle = async () => {
     setIsToggling(true);
@@ -60,7 +77,7 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
 
   return (
     <>
-      <li className={`task-item ${isCompleted ? 'completed' : 'pending'}`}>
+      <li className={`task-item ${isCompleted ? 'completed' : 'pending'} ${overdue ? 'overdue' : ''}`}>
         <div className="task-main">
           {/* Custom square accessible checkbox */}
           <label className="checkbox-container">
@@ -79,9 +96,22 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
               <h3 className={`task-title ${isCompleted ? 'strikethrough' : ''}`}>
                 {task.title}
               </h3>
-              <span className={`status-badge ${isCompleted ? 'completed' : 'pending'}`}>
-                {isCompleted ? 'Completed' : 'Pending'}
-              </span>
+              <div className="badge-group">
+                {/* Priority label */}
+                <span className={`priority-badge priority-${task.priority || 'medium'}`}>
+                  {task.priority || 'medium'}
+                </span>
+                {/* Overdue badge if pending & past due date */}
+                {overdue && (
+                  <span className="overdue-badge">
+                    Overdue
+                  </span>
+                )}
+                {/* Status label */}
+                <span className={`status-badge ${isCompleted ? 'completed' : 'pending'}`}>
+                  {isCompleted ? 'Completed' : 'Pending'}
+                </span>
+              </div>
             </div>
 
             {task.description && (
@@ -89,6 +119,11 @@ export default function TaskItem({ task, onToggle, onEdit, onDelete }) {
             )}
 
             <div className="task-meta">
+              {task.due_date && (
+                <span className={`task-due-date ${overdue ? 'text-overdue' : ''}`}>
+                  Due: {formatDate(task.due_date)}
+                </span>
+              )}
               <span className="task-date">Created {formatDate(task.created_at)}</span>
             </div>
           </div>
