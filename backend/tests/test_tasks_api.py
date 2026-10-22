@@ -70,27 +70,37 @@ def test_list_tasks_and_status_filter(client: TestClient):
     assert "Invalid status filter" in res_invalid.json()["error"]["message"]
 
 
-def test_put_update_task(client: TestClient):
+def test_put_update_task_success(client: TestClient):
     created = client.post("/api/tasks", json={"title": "Original"}).json()["data"]
     task_id = created["id"]
 
-    # Valid update
     res = client.put(f"/api/tasks/{task_id}", json={"title": "Updated", "description": "New desc"})
     assert res.status_code == 200
     assert res.json()["data"]["title"] == "Updated"
     assert res.json()["data"]["description"] == "New desc"
 
-    # Unknown ID -> 404
-    res_404 = client.put("/api/tasks/9999", json={"title": "Does not exist"})
-    assert res_404.status_code == 404
-    assert "not found" in res_404.json()["error"]["message"]
 
-    # Invalid status in update -> 400
-    res_bad_status = client.put(f"/api/tasks/{task_id}", json={"status": "invalid"})
-    assert res_bad_status.status_code == 400
+def test_put_update_missing_id_returns_404(client: TestClient):
+    res = client.put("/api/tasks/9999", json={"title": "Does not exist"})
+    assert res.status_code == 404
+    assert "not found" in res.json()["error"]["message"]
 
 
-def test_patch_toggle_task(client: TestClient):
+def test_put_update_invalid_status_returns_400(client: TestClient):
+    created = client.post("/api/tasks", json={"title": "Test"}).json()["data"]
+    res = client.put(f"/api/tasks/{created['id']}", json={"status": "invalid_status"})
+    assert res.status_code == 400
+    assert res.json()["error"]["message"] == "Validation error"
+
+
+def test_put_update_empty_body_returns_400(client: TestClient):
+    created = client.post("/api/tasks", json={"title": "Test"}).json()["data"]
+    res = client.put(f"/api/tasks/{created['id']}", json={})
+    assert res.status_code == 400
+    assert res.json()["error"]["message"] == "Validation error"
+
+
+def test_patch_toggle_task_success(client: TestClient):
     created = client.post("/api/tasks", json={"title": "Toggle Me"}).json()["data"]
     task_id = created["id"]
     assert created["status"] == "pending"
@@ -105,9 +115,11 @@ def test_patch_toggle_task(client: TestClient):
     assert res2.status_code == 200
     assert res2.json()["data"]["status"] == "pending"
 
-    # Toggle non-existent ID -> 404
+
+def test_patch_toggle_missing_id_returns_404(client: TestClient):
     res_404 = client.patch("/api/tasks/9999/toggle")
     assert res_404.status_code == 404
+    assert "not found" in res_404.json()["error"]["message"]
 
 
 def test_delete_task(client: TestClient):
