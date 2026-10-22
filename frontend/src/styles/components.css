@@ -1,0 +1,363 @@
+/* Header */
+.app-header {
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-4);
+}
+
+.app-title {
+  font-size: 1.75rem;
+  letter-spacing: -0.03em;
+  margin-bottom: var(--space-1);
+}
+
+.app-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Error Alert */
+.error-alert {
+  background-color: rgba(166, 95, 95, 0.12);
+  border: 1px solid var(--danger);
+  color: #ffb3b3;
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.error-alert-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.error-alert-list {
+  margin: var(--space-2) 0 0 0;
+  padding-left: var(--space-4);
+  font-size: 0.85rem;
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: var(--space-1);
+}
+
+/* Forms */
+.task-form {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.form-heading {
+  font-size: 1.15rem;
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-2);
+}
+
+.form-group {
+  margin-bottom: var(--space-3);
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: var(--space-1);
+}
+
+.required-star {
+  color: var(--danger);
+}
+
+.optional-tag {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--space-4);
+}
+
+/* Task List */
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.task-list-loading,
+.task-list-empty {
+  background-color: var(--surface);
+  border: 1px dashed var(--border);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Task Item */
+.task-item {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: border-color 0.15s ease;
+}
+
+/* Visual distinction: left border */
+.task-item.pending {
+  border-left: 4px solid var(--accent);
+}
+
+.task-item.completed {
+  border-left: 4px solid var(--success);
+  opacity: 0.85;
+}
+
+.task-main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* Custom Square Checkbox */
+.checkbox-container {
+  display: inline-flex;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom {
+  height: 22px;
+  width: 22px;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.checkbox-container:hover input ~ .checkbox-custom {
+  border-color: var(--accent);
+}
+
+.checkbox-container input:checked ~ .checkbox-custom {
+  background-color: var(--success);
+  border-color: var(--success);
+}
+
+.checkbox-container input:checked ~ .checkbox-custom::after {
+  content: "";
+  display: block;
+  width: 5px;
+  height: 10px;
+  border: solid #121418;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-bottom: 2px;
+}
+
+.checkbox-container input:focus-visible ~ .checkbox-custom {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Task content */
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.task-title {
+  font-size: 1.05rem;
+  margin: 0;
+  word-break: break-word;
+}
+
+.task-title.strikethrough {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.status-badge.pending {
+  color: var(--accent);
+  border-color: var(--accent);
+  background-color: rgba(95, 127, 156, 0.1);
+}
+
+.status-badge.completed {
+  color: var(--success);
+  border-color: var(--success);
+  background-color: rgba(107, 143, 113, 0.1);
+}
+
+.task-description {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: var(--space-2) 0;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.task-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+}
+
+/* Task actions (Edit / Delete) */
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-2);
+  justify-content: flex-end;
+}
+
+.btn-action {
+  min-height: 44px;
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.875rem;
+}
+
+.btn-action.edit:hover {
+  border-color: var(--accent);
+  color: var(--accent-hover);
+}
+
+.btn-action.delete:hover {
+  border-color: var(--danger);
+  color: #ff9999;
+}
+
+/* Edit Form */
+.task-edit-form {
+  width: 100%;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Generic Buttons */
+.btn-primary {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-secondary {
+  background-color: var(--surface-2);
+  color: var(--text);
+}
+
+.btn-danger {
+  background-color: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.btn-danger:hover {
+  background-color: #8f4c4c;
+  border-color: #8f4c4c;
+}
+
+/* Modal / Dialog */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.modal-box {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-6);
+  box-shadow: none;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  margin-bottom: var(--space-2);
+}
+
+.modal-message {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-6);
+  line-height: 1.4;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
